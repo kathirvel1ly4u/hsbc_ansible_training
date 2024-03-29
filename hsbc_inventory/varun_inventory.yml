@@ -1,0 +1,46 @@
+all:
+  hosts:
+    workstation.lab.example.com: {}
+  vars:
+    print_somevar: Level3_all_inventory_file
+    ansible_connection: ssh
+    ansible_port: 22
+    ansible_user: devops
+
+range:
+  hosts:
+    192.168.1.[1:4]: {}
+
+dev:
+  hosts:
+    servera.lab.example.com: {} 
+    serverb.lab.example.com:
+      print_somevar: Level8_file_host_vars_serverb
+
+pune:
+  hosts:
+    db_server1:
+      ansible_host: serverc.lab.example.com
+    db_server2:
+      pune_var1: value2222
+      ansible_host: serverd.lab.example.com
+  vars:
+    mysql_user: kathirvel
+    mysql_password: redhat123
+    pune_var1: "value1"
+
+database:
+  hosts:
+    servere.lab.example.com: {}
+    serverf.lab.example.com: {}
+
+windows:
+  hosts:
+    win1.lab.example.com: {}
+  vars:
+    ansible_connection: winrm
+    ansible_port: 5986
+    ansible_user: meeravali
+    ansible_become_user: administrator
+    ansible_become_method: runas
+    ansible_become: true

@@ -1,0 +1,44 @@
+## INI Format Inventory File
+
+workstation.lab.example.com
+
+
+[all:vars]
+print_somevar=Level3_all_inventory_file
+ansible_connection=ssh
+ansible_port=22
+ansible_user=devops
+
+[dev]
+servera.lab.example.com
+serverb.lab.example.com print_somevar=Level8_file_host_vars_serverb
+
+[pune]
+db_server1 ansible_host=serverc.lab.example.com
+db_server2 ansible_host=serverd.lab.example.com pune_var1=value2222
+#172.25.250.14
+
+[pune:vars]
+mysql_user=kathirvel
+mysql_password=redhat123
+pune_var1=value1
+
+[database]
+servere.lab.example.com
+serverf.lab.example.com
+
+[range]
+#192.168.1.[1:4]
+172.25.250.[10:12]
+
+#[windows]
+#win1.lab.example.com
+#
+#[windows:vars]
+#ansible_connection=winrm
+#ansible_port=5986
+#ansible_user=meeravali
+#ansible_become_user=administrator
+#ansible_become_method=runas
+
+#win1.lab.example.com ansible_connection=winrm ansible_port=5986 ansible_user=meeravali ansible_become_user=administrator

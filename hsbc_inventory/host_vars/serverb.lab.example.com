@@ -1,0 +1,1 @@
+print_somevar: Level9_inventory_host_vars_serverb

@@ -1,0 +1,39 @@
+- name: Install Httpd web server
+  hosts: servera*
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Outside Block No privilege Task 1
+      ansible.builtin.debug:                       
+        msg: "{{ print_somevar }}"
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      become: true
+
+    - name: Setup Web Server with root perm
+      block:
+        - name: Install httpd Server first
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: Deply a simple html app
+          ansible.builtin.copy:
+            content: "This is First Page"
+            dest: /var/www/html/index.html
+            mode: 0644
+
+        - name: Start web service
+          ansible.builtin.service:
+            name: httpd
+            state: started
+      become: true
+
+    - name: Outside Block No privilege Task 2
+      ansible.builtin.debug:                       
+        msg: "{{ print_somevar }}"

@@ -1,0 +1,53 @@
+- name: Handlers /Dependency Tasks/ Notice
+  hosts: servera*
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Install httpd Server first
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      notify:
+        - Restart web service
+        - web package installed
+
+    - name: Deply a simple html app
+      ansible.builtin.copy:
+        content: "This is First Page"
+        dest: /var/www/html/index.html
+        mode: 0644
+      notify:
+        - Restart web service
+        - application deployed
+
+  handlers:
+    - name: One more Handler
+      ansible.builtin.debug:
+        msg: "One more handlers of web app"
+    - name: application deployed
+      ansible.builtin.debug:
+        msg: "App deployed Successfully"
+
+    - name: application deployed1
+      ansible.builtin.debug:
+        msg: "App deployed Successfully"
+      listen: application deployed
+
+    - name: application deployed2
+      ansible.builtin.debug:
+        msg: "App deployed Successfully"
+      listen: application deployed
+
+    - name: application deployed3
+      ansible.builtin.debug:
+        msg: "App deployed Successfully"
+      listen: application deployed
+
+    - name: web package installed
+      ansible.builtin.debug:
+        msg: "Package Installed Successfully"
+    - name: Restart web service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+    

@@ -1,0 +1,34 @@
+- name: Install Httpd web server
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Packages Efficient
+      ansible.builtin.dnf:
+        name:
+          - httpd
+          - vsftpd
+        state: present
+
+    # - name: Install Packages NON-Efficient
+    #   ansible.builtin.dnf:
+    #     name: "{{ item }}"
+    #     state: present
+    #   loop:
+    #       - httpd
+    #       - vsftpd
+
+
+    # - name: Start multiple service NOT WORK
+    #   ansible.builtin.service:
+    #     name:
+    #       - httpd
+    #       - vsftpd
+    #     state: started
+    - name: Start multiple service WORK
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+      loop:
+          - httpd
+          - vsftpd

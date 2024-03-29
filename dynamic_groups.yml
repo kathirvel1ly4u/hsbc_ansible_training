@@ -1,0 +1,13 @@
+- name: Generate dynamic groups
+  hosts: all
+  tasks:
+    - name: Print
+      ansible.builtin.debug:
+        msg: "{{ ansible_architecture }}"
+    - name: Generate dynamic groups architecture
+      ansible.builtin.group_by:
+        key: arch_{{ ansible_facts['architecture'] }}
+
+- name: run
+  hosts: arch_x86_64
+

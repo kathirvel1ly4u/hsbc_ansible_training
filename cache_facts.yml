@@ -1,0 +1,22 @@
+- name: Collect Facts Here
+  hosts: servera*
+  gather_facts: false
+  tasks:
+  - name: Collect Selected Facts
+    ansible.builtin.setup:
+      gather_subset:
+        - '!all'
+        - '!min'
+        - hardware
+
+  - name: Task 1 in Development
+    ansible.builtin.debug:
+      msg: "{{ ansible_architecture}} for Development"
+
+- name: Don't collect Facts here
+  hosts: servera*
+  #gather_facts: false
+  tasks:
+  - name: Task 2 in Development
+    ansible.builtin.debug:
+      msg: "Task 2 for Development {{ ansible_fqdn }} and  {{ ansible_default_ipv4.address }} and {{ ansible_devices.vda.size }}"

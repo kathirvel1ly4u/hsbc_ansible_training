@@ -1,0 +1,10 @@
+---
+# tasks file for external
+
+- name: Print me
+  ansible.builtin.debug:
+    msg: "Variable = {{ external_port }}"
+
+- name: Some Task
+  ansible.builtin.command: sleep 4
+  notify: external_handler

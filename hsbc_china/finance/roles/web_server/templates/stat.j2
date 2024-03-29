@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<title> Stat for {{ inventory_hostname }} </title>
+	</head>
+	<body>
+		Hostname 	= {{ ansible_hostname }}
+		Architecture	= {{ ansible_architecture }}
+		IP Address	= {{ ansible_default_ipv4.address }}
+		HDD Size	= {{ ansible_devices.vda.size }}
+		OS		= {{ ansible_distribution }}
+		RAM		= {{ ansible_memory_mb.real.total }}
+		Free RAM	= {{ ansible_memory_mb.real.free }}
+	</body>
+</html>

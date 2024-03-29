@@ -1,0 +1,43 @@
+print_somevar: Level14_play_vars_files
+users:
+  - f_name: aditya
+    l_name: pandey
+    uid: 1100
+    shell: /bin/bash
+
+  - f_name: zan
+    l_name: lin
+    uid: 1101
+    shell: /bin/ksh
+
+number_list1: [4,2,7,8,9]
+number_list2: [10,[4,2],[7,8,9],1]
+
+simple_list:
+- aditya
+- zan
+
+complex_list:
+  - f_name: aditya
+    l_name: pandey
+    uid: 1500
+    shell: /bin/bash
+  - f_name: zan
+    l_name: lin
+    uid: 1600
+    shell: /bin/ksh
+
+  
+user_dict:
+  aditya: pandey
+  zan: lin
+  # key: value
+network_ips:
+  - 192.168.5.50/24
+  - 172.25.250.254/16
+  - 10.10.2.24/8
+  - 192.268.3.4/32
+  - 22.44.66.77/8
+  - 144.135.44.11/16
+  - fe80::5946:6060:a3e0:b4a/64
+

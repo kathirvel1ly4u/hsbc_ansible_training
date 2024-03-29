@@ -1,0 +1,28 @@
+---
+# tasks file for web_server
+
+- name: Install httpd Server first
+  ansible.builtin.dnf:
+    name: "{{ web_server_package }}"
+    state: present
+  notify:
+    - Restart web service
+    - web package installed
+
+- name: Deply a simple html app
+  ansible.builtin.copy:
+    content: "{{ web_server_content }}"
+    dest: "{{ web_server_file }}"
+    mode: 0644
+  notify:
+    - Restart web service
+    - application deployed
+
+- name: Deply a Stat Page
+  ansible.builtin.template:
+    src: stat.j2
+    dest: "{{ web_server_stat }}"
+    mode: 0644
+  notify:
+    - Restart web service
+    - stat page deployed

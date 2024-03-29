@@ -1,0 +1,26 @@
+- name: Test First Playbook
+  hosts: servera*
+  gather_facts: false
+  # List of tasks
+
+  roles:
+    - role: external
+
+  tasks:
+  - name: Create a block og grouped tasks
+    block:
+      - name: Create file
+        ansible.builtin.command: tail -2 /etc/passwd
+
+      - name: Create file
+        ansible.builtin.shell: touch /tmp/file2
+    when: var1 is defined
+
+  - name: Create a File Good yaml
+    ansible.builtin.copy:
+      content: "Content of file"
+      dest: /tmp/file1
+      mode: 0644
+
+  # - name: Create a File Bad ini
+  #  ansible.builtin.copy: content="Content of file" dest=/tmp/file1 mode=0644

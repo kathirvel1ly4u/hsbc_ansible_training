@@ -1,0 +1,118 @@
+- name: Loops and Lookup Demo
+  hosts: servera*
+  gather_facts: true
+  vars_files:
+    - vars/outside_vars.yml
+    - vars/users_subelements.yml
+  tasks:
+    - name: Print simple list with items
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_items: "{{ simple_list }}"
+
+    - name: Print simple list with list
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_list: "{{ simple_list }}"
+
+    - name: Print simple list with loop 2.5
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ simple_list }}"
+
+    - name: Print dict with_dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} -- {{ item.value }}"
+      with_dict: "{{ user_dict }}"
+
+    - name: Print dict with loop
+      ansible.builtin.debug:
+        msg: "{{ item.key }} -- {{ item.value }}"
+      loop: "{{ user_dict | dict2items }}"
+
+    - name: Print Sequence with_sequence
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_sequence: start=0 end=5 format=eth%x
+
+    - name: print filenames in folder
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_fileglob:
+        - /etc/ssh/*
+
+    - name: print ENV with_env
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_env:
+        - 'PWD'
+        - 'container'
+        - 'HOME'
+
+    - name: Print list with lookup/query
+      ansible.builtin.debug:
+        msg: "{{ item.f_name }} -- {{ item.l_name}}"
+      loop: "{{ lookup('ansible.builtin.list', complex_list) }}"
+
+    - name: Print dict with_dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} -- {{ item.value }}"
+      loop: "{{ lookup('ansible.builtin.dict', user_dict) }}"
+
+    - name: Print Sequence with_sequence
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.sequence', 'start=0 end=5 format=eth%x') }}"
+    - name: print filenames in folder
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.fileglob','/etc/ssh/*') }}"
+
+    - name: Deply a statistics
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', 'j2/stat.j2') }}"
+
+    - name: print ENV with_env
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ lookup('env','PWD','container','HOME',wantlist=True) }}"
+
+    - name: Read a file
+      ansible.builtin.debug:
+        msg: "{{ lookup('file','/etc/passwdddddd',errors='warn') }}"
+    - name: Print Flatten list OLD
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ number_list2 | flatten | sort | reverse }}"
+
+    - name: Print Flatten list New
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ lookup('community.general.flattened', number_list2) | sort }}"
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.f_name }}"
+        comment: "{{ item.f_name | upper }} {{ item.l_name | upper }}"
+        password: "{{ lookup('password','./user_passwords/{{ item.f_name }}.txt chars=ascii_letters,hexdigits encrypt=sha512_crypt length=15') }}"
+        #password: "{{ 'redhat123' | password_hash('sha512') }}"
+        uid: "{{ item.uid }}"
+        shell:  "{{ item.shell }}"
+        state: present
+      loop: "{{ complex_list }}"
+      become: true
+
+
+    - name: Subelements Demo 1
+      ansible.builtin.debug:
+        msg: "{{ item.1 }} -- {{ item[0].name }}"
+      with_subelements:
+        - "{{ users }}"
+        - mysql.hosts
+        #- authorized
+    
+    - name: Subelements Demo 2
+      ansible.builtin.debug:
+        #msg: "{{ item.1 }} -- {{ item[0].name }}"
+        msg: "{{ item }}"
+      loop: "{{ lookup('ansible.builtin.subelements', users, 'authorized') }}"

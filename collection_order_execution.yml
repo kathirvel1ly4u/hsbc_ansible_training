@@ -1,0 +1,11 @@
+- name: Order of execution role/tasks
+  hosts: servera*
+  gather_facts: true
+
+  collections:
+    - hsbc_china.finance
+
+  roles:
+    - role: hsbc_china.finance.web_server
+      become: true
+

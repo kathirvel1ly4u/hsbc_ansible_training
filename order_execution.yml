@@ -1,0 +1,59 @@
+- name: Order of execution role/tasks
+  hosts: servera*
+  gather_facts: true
+
+  pre_tasks:
+    - name: Check pre-requisites
+      ansible.builtin.assert:
+        that:
+          - ansible_memory_mb.real.free > 200
+        success_msg: "Enogh Memory AVailable"
+        fail_msg: "Memory Requirements NOT met"
+
+    - name: Inform Client services Down
+      ansible.builtin.command: sleep 4
+      notify: service_pre_handler
+
+  roles:
+    - role: web_server
+      become: true
+
+  tasks:
+    - name: Run the role based on condition
+      ansible.builtin.include_role:
+        name: external
+      when: youme is not defined
+
+    - name: Extra Tasks
+      ansible.builtin.command: sleep 4
+      notify: extra_handler
+
+  post_tasks:
+    - name: Check Website initial Page
+      ansible.builtin.uri:
+        url: http://{{inventory_hostname}}/index.html
+        return_content: true
+      register: test_output
+      
+    - name: Check Website
+      ansible.builtin.assert:
+        that:
+          - test_output.status == 200
+        success_msg: "Website Running Fine"
+        fail_msg: "Website 404"
+      
+    - name: Inform Client services up
+      ansible.builtin.command: sleep 4
+      notify: service_post_handler
+  handlers:
+    - name: extra_handler
+      ansible.builtin.debug:
+        msg: "Enough Sleeping"
+
+    - name: service_pre_handler
+      ansible.builtin.debug:
+        msg: "HSBC services Down 12 - 3 AM"
+
+    - name: service_post_handler
+      ansible.builtin.debug:
+        msg: "HSBC services UP Enjoy"

@@ -1,0 +1,5 @@
+---
+# handlers file for external
+- name: external_handler
+  ansible.builtin.debug: 
+    msg: "Handlers for External"

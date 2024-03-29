@@ -1,0 +1,67 @@
+- name: Filter Demo
+  hosts: servera*
+  gather_facts: true
+  vars:
+    myvar: "hello"
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: String Filters
+      ansible.builtin.debug:
+        msg: >
+                {{ myvar | upper}} This line is 
+                there for
+                {{ 'filter' | capitalize | length }} demo
+                {{ youme | default('NOT DEFINED') }}
+
+    - name: BLock for Web Tasks
+      block:
+        - name: Install httpd Server first
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: Deply a statistics
+          ansible.builtin.template:
+            src: j2/stat.j2
+            dest: /var/www/html/stat.html
+            mode: 0644
+
+        - name: Start web service
+          ansible.builtin.service:
+            name: httpd
+            state: started
+      become: true
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.f_name }}"
+        comment: "{{ item.f_name | upper }} {{ item.l_name | upper }}"
+        password: "{{ 'redhat123' | password_hash('sha512') }}"
+        uid: "{{ item.uid }}"
+        shell:  "{{ item.shell }}"
+        state: present
+      loop: "{{ users }}"
+      become: true
+
+    - name: Print number list
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ number_list2 | flatten | sort | reverse }}"
+
+    - name: Print simple list
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ simple_list }}"
+    - name: Print complex list
+      ansible.builtin.debug:
+        msg: "{{ item.f_name }} -- {{ item.l_name }}"
+      loop: "{{ complex_list }}"
+    - name: Print dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} -- {{ item.value }}"
+      loop: "{{ user_dict | dict2items }}"
+
+    - name: Print IPS
+      ansible.builtin.debug:
+        msg: "{{ network_ips | ansible.utils.ipaddr | ansible.utils.ipv4('revdns') }}"

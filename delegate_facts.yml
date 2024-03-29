@@ -1,0 +1,24 @@
+- name: Delegate Facts from ServerA to ServerB
+  hosts: servera*
+  gather_facts: true
+  tasks:
+    - name: Print Facts
+      ansible.builtin.debug:
+        msg: >
+              {{ ansible_local.hsbc.emp_info.name }}
+              {{ ansible_local.hsbc.emp_info.id }}
+              {{ ansible_local.hsbc.dept_info.name }}
+              {{ ansible_local.hsbc.dept_info.location }}
+
+    - name: User Facts of ServerA to Serverb/ Create user
+      ansible.builtin.user:
+        name: "{{ ansible_local.hsbc.emp_info.name }}"
+        comment: "{{ ansible_local.hsbc.dept_info.location | upper }} {{ ansible_local.hsbc.dept_info.name | upper }}"
+        password: "{{ lookup('password', './{{ansible_local.hsbc.emp_info.name}}.txt chars=ascii_letters,hexdigits encrypt=sha512_crypt length=10') }}"
+        #password: "{{ 'redhat123' | password_hash('sha512') }}"
+        uid: "{{ ansible_local.hsbc.emp_info.id }}"
+        state: present
+      delegate_to: serverb.lab.example.com
+      delegate_facts: true
+      become: true
+

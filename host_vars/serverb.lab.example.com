@@ -1,0 +1,1 @@
+print_somevar: Level10_playbook_host_vars_serverb

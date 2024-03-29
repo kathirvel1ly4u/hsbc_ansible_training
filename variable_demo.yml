@@ -1,0 +1,47 @@
+- name: Variable Demo
+  hosts: dev,pune
+  gather_facts: false
+  vars:
+    print_somevar: Level12_play_vars 
+  vars_prompt:
+    - name: print_somevar
+      prompt: "Enter your value"
+      private: false
+  vars_files:
+    - ./vars/outside_vars.yml
+  roles:
+    - role: print
+
+  tasks:
+    - name: set the variable as FACT
+      ansible.builtin.set_fact:
+        print_somevar: Level19_set_fact
+
+    - name: Read vars from file via module
+      ansible.builtin.include_vars:
+        file: vars/outside2_vars.yml
+
+    - name: Run a role in tasks
+      ansible.builtin.include_role:
+        name: print
+      vars:
+        print_somevar: Level20_include_role_value
+      #when: youme is defined
+
+    - name: Block Task and vars
+      block:
+        - name: Print in BLOCK TASK 1
+          ansible.builtin.debug:
+            msg: "{{ print_somevar }}"
+          vars:
+            print_somevar: Level17_play_task_vars
+
+        - name: Print in BLOCK TASK 2
+          ansible.builtin.debug:
+            msg: "{{ print_somevar }}"
+      vars:
+        print_somevar: Level16_play_block
+
+    - name: Print in TASKS REPEAT
+      ansible.builtin.debug:
+        msg: "{{ print_somevar }} {{ mysql_user }}"

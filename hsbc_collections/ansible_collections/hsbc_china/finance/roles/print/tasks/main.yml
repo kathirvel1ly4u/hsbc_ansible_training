@@ -1,0 +1,9 @@
+---
+# tasks file for print
+- name: Putting my presence
+  ansible.builtin.command: sleep 4
+  notify:
+    - print handler
+- name: Print the value in ROLE
+  ansible.builtin.debug:
+    msg: "{{ print_somevar }}"

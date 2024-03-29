@@ -1,0 +1,21 @@
+---
+ansible-navigator:
+  ansible:
+    config:
+      path: /home/student/hsbc/ansible.cfg
+  execution-environment:
+    container-engine: podman
+    enabled: true
+    image: hub.lab.example.com/ee-supported-rhel8:latest
+    environment-variables:
+      set:
+        ANSIBLE_PIPELINING: true
+    pull:
+      policy: missing
+  images:
+    details:
+    - everything
+  mode: stdout
+  playbook-artifact:
+    enable: false
+    save-as: '{playbook_dir}/{playbook_name}-artifact-{time_stamp}.json'

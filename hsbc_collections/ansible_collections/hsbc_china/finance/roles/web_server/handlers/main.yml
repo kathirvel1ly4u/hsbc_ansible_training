@@ -1,0 +1,23 @@
+---
+# handlers file for web_server
+
+- name: One more Handler
+  ansible.builtin.debug:
+    msg: "One more handlers of web app"
+
+- name: application deployed
+  ansible.builtin.debug:
+    msg: "App deployed Successfully"
+
+- name: stat page deployed
+  ansible.builtin.debug:
+    msg: "Stat deployed Successfully"
+
+- name: web package installed
+  ansible.builtin.debug:
+    msg: "Package Installed Successfully"
+
+- name: Restart web service
+  ansible.builtin.service:
+    name: "{{ web_server_service }}"
+    state: "{{ web_server_state }}"

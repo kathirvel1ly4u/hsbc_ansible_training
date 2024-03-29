@@ -1,0 +1,13 @@
+- name: Order of execution role/tasks
+  hosts: all
+  gather_facts: false
+  serial: 1
+  order: reverse_sorted
+
+  tasks:
+    - name: Extra Tasks
+      ansible.builtin.command: sleep 1
+
+    # - name: one more
+    #   ansible.builtin.debug:
+    #     msg: "Enough Sleeping"

@@ -1,0 +1,5 @@
+---
+# handlers file for print
+- name: print handler
+  ansible.builtin.debug:
+    msg: "Just running print handler"
